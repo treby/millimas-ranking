@@ -1,0 +1,14 @@
+{
+    "manifest_version": 2,
+    "name": "IDOL M@STER Million Live! Ranking Checker",
+    "description": "for Event.",
+    "version": "0.0.1",
+    "content_scripts": [
+        {
+            "matches": ["http://imas.gree-apps.net/app/*"],
+            "js" : [
+                "src/content_scripts.js"
+            ]
+        }
+    ]
+}
