@@ -10,11 +10,8 @@ $('#gotoEventPage').click(function(e) {
     chrome.tabs.create({url: "http://imas.gree-apps.net/app/index.php/event"});
 });
 
-$('#getRankingStatus').click(function(e) {
-    var notification_id = "notification" + Date.now();
-    chrome.notifications.create(notification_id, opt, function() {});
+var sub_border = localStorage['mypt'] - localStorage['border1200'];
 
-    setTimeout(function() {
-        chrome.notifications.clear(notification_id, function() {});
-    }, 3000);
-});
+$('#mr_popup_myrank').text('現在の順位：' + localStorage['myrank'] +'位');
+$('#mr_popup_mypt').html('現在のpt：' + localStorage['mypt'] + ' pt<br>'
+ + '(ボーダー比: ' + sub_border + ')');
