@@ -16,7 +16,7 @@ def convert(file_name)
   open(file_name) do |file|
     buffer = []
     lines = fields = 0
-    while l = file.gets
+    file.readlines.each do |l|
       lines += 1
       buffer.push(l.gsub(/(\n|\r\n)/, ''))
       if (lines % 4 == 0) then
