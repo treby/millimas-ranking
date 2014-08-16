@@ -15,14 +15,12 @@ def convert(file_name)
   data_list = []
   open(file_name) do |file|
     buffer = []
-    lines = fields = 0
     file.readlines.each do |l|
-      lines += 1
       buffer.push(l.gsub(/(\n|\r\n)/, ''))
-      if (lines % 4 == 0) then
-        data_list.push(parse buffer)
-        buffer = []
-      end
+      next if buffer.length < 4
+
+      data_list.push(parse buffer)
+      buffer = []
     end
   end
 
