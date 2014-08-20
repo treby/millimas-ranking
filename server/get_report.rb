@@ -25,6 +25,8 @@ login(agent)
 
 target_uri = 'http://imas.gree-apps.net/app/index.php'
 backurl = URI.encode_www_form({ url: target_uri })
+event_uri = 'http://imas.gree-apps.net/app/index.php/event'
+
 begin
   agent.get(target_uri)
 rescue Mechanize::ResponseCodeError => ex
@@ -38,7 +40,7 @@ agent.get('http://pf.gree.net/58737?' + backurl) do |page|
   page.form_with(name: 'redirect').submit
 end
 
-agent.get('http://imas.gree-apps.net/app/index.php/event')
+agent.get(event_uri)
 agent.page.search('.event-user-status').text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').slice(0..2).each do |line|
   puts line.split(/位/)[1]
 end
