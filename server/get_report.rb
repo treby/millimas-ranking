@@ -45,4 +45,4 @@ agent.page.search('.event-user-status').text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub
   puts line.split(/位/)[1]
 end
 
-puts agent.page.search('.s-pt')[1].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
+puts agent.page.search('.txt')[0].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
