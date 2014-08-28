@@ -2,20 +2,28 @@ $(function() {
     $.get('data/sample.csv', function (data) {
         var options = {
             chart: {
-                type: 'line'
+                type: 'spline'
             },
             title: {
                 text: 'ranking border'
             },
+            tooltip: {
+                shared: true,
+                crosshairs: true
+            },
             xAxis: {
-                categories: []
+                categories: [],
+                labels: {
+                    enabled: false
+                }
             },
             yAxis: {
                 title: {
                     text: 'pt'
                 },
+                min: 0,
             },
-            series: []
+            series: [],
         };
         var lines = data.split('\n');
         $.each(lines, function(lineNo, line) {
@@ -30,10 +38,10 @@ $(function() {
                         options.series.push(series);
                     }
                 });
-            } else if(items.length == 4) {
+            } else {
                 $.each(items, function(itemNo, item) {
                     if (itemNo == 0) {
-                        options.xAxis.categories.push('');
+                        options.xAxis.categories.push(item);
                     } else {
                         options.series[itemNo - 1].data.push(parseInt(item));
                     }
