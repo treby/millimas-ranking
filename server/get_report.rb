@@ -1,6 +1,4 @@
 require 'mechanize'
-require 'nokogiri'
-require 'uri'
 
 def login(agent)
   gree_email = ENV['GREE_EMAIL']
