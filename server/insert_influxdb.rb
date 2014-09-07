@@ -19,7 +19,7 @@ def parse(packet)
   }
 end
 
-def convert_from(file_name)
+def convert_and_insert(file_name)
   data_list = []
   influxdb = InfluxDB::Client.new 'millimas_ranking', username: 'treby', password: 'treby'
 
@@ -40,6 +40,6 @@ def convert_from(file_name)
   data_list
 end
 
-convert_from(res_file_name).each do |data|
+convert_and_insert(res_file_name).each do |data|
   p data
 end
