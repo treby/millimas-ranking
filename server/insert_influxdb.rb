@@ -1,7 +1,7 @@
 require 'time'
 require 'influxdb'
 
-res_file_name = 'sample.log'
+res_file_name = File.expand_path('sample.log', File.dirname(__FILE__))
 
 def parse(packet)
   meta_data = packet[3]
