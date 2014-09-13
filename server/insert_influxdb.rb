@@ -1,7 +1,12 @@
 require 'time'
 require 'influxdb'
 
-res_file_name = File.expand_path('sample.log', File.dirname(__FILE__))
+series_name = 'sample'
+res_file_name = File.expand_path('%s.log'%[series_name], File.dirname(__FILE__))
+host = 'localhost'
+user = 'treby'
+pass = 'treby'
+db_name = 'millimas_ranking'
 
 def parse(packet)
   meta_data = packet[3]
@@ -19,9 +24,9 @@ def parse(packet)
   }
 end
 
-def convert_and_insert(file_name)
+def convert_and_insert(file_name, host, user, pass, db_name, series_name)
   data_list = []
-  influxdb = InfluxDB::Client.new 'millimas_ranking', username: 'treby', password: 'treby'
+  influxdb = InfluxDB::Client.new db_name, host: host, username: user, password: pass
 
   open(file_name) do |file|
     buffer = []
@@ -32,7 +37,7 @@ def convert_and_insert(file_name)
       data = parse buffer
 
       data_list.push(data)
-      influxdb.write_point('sample_ranking', data)
+      influxdb.write_point(series_name, data)
       buffer = []
     end
   end
@@ -40,6 +45,6 @@ def convert_and_insert(file_name)
   data_list
 end
 
-convert_and_insert(res_file_name).each do |data|
+convert_and_insert(res_file_name, host, user, pass, db_name, series_name).each do |data|
   p data
 end
