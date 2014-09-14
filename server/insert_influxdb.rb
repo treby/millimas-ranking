@@ -32,6 +32,8 @@ def convert_and_insert(file_name, host, user, pass, db_name, series_name)
     buffer = []
     file.readlines.each do |l|
       buffer.push(l.gsub(/(\n|\r\n)/, ''))
+
+      # 4つで一データ
       next if buffer.length < 4
 
       data = parse buffer
