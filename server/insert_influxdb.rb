@@ -9,7 +9,7 @@ pass = 'treby'
 db_name = 'millimas_ranking'
 
 def parse(packet)
-  meta_data = packet[3]
+  meta_data = packet.last
   str_date = meta_data.match(/..\/../).to_s
   str_time = meta_data.match(/..:../).to_s
 

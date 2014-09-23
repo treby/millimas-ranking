@@ -38,8 +38,9 @@ agent.get('http://pf.gree.net/58737?' + backurl) do |page|
 end
 
 agent.get(target_uri)
-agent.page.search('.event-user-status').text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').slice(0..3).each do |line|
-  puts line.split(/位/)[1]
+agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
+  next unless line.include?('位')
+  puts line.strip.sub(/位/, ':')
 end
 
 puts agent.page.search('.pb')[1].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
