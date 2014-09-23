@@ -37,10 +37,18 @@ agent.get('http://pf.gree.net/58737?' + backurl) do |page|
   page.form_with(name: 'redirect').submit
 end
 
+output = []
 agent.get(target_uri)
 agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
   next unless line.include?('位')
-  puts line.strip.sub(/位/, ':')
+  border = line.strip.sub(/位/, ':')
+  puts border
+
+  output.push border
 end
 
-puts agent.page.search('.pb')[1].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
+timestamp = agent.page.search('.pb')[1].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
+puts timestamp
+
+output.push timestamp
+File.write('recent.tmp', output.join("\n"))
