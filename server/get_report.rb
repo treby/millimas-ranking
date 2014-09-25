@@ -29,7 +29,6 @@ begin
 rescue Mechanize::ResponseCodeError => ex
   case ex.response_code
   when '503' then
-    p agent.page
   end
 end
 
@@ -39,6 +38,8 @@ end
 
 output = []
 agent.get(target_uri)
+agent.page.save!('recent.html')
+
 agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
   next unless line.include?('位')
   border = line.strip.sub(/位/, ':')
