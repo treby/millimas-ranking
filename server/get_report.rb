@@ -53,3 +53,7 @@ puts timestamp
 
 output.push timestamp
 File.write('recent.tmp', output.join("\n"))
+open('event.log', 'a+') do |f|
+  f.write output.join("\n")
+  f.write "\n"
+end
