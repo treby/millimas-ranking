@@ -9,19 +9,19 @@ pass = 'treby'
 db_name = 'millimas_ranking'
 
 def parse(packet)
-  meta_data = packet.last
+  meta_data = packet.pop
   str_date = meta_data.match(/..\/../).to_s
   str_time = meta_data.match(/..:../).to_s
 
   updated_at = Time.strptime("%s %s"%[str_date, str_time], "%m/%d %H:%M")
 
-  {
-    time: updated_at.to_i,
-    border_1: packet[0].gsub(',', '').to_i,
-    border_100: packet[1].gsub(',', '').to_i,
-    border_1200: packet[2].gsub(',', '').to_i,
-    updated_at: updated_at
-  }
+  ret = { time: updated_at.to_i }
+  packet.each do |line|
+    rank, point = line.split(':')
+    ret["border_#{rank}".to_sym] = point.gsub(',', '').to_i
+  end
+  ret[:updated_at] = updated_at
+  ret
 end
 
 def convert_and_insert(file_name, host, user, pass, db_name, series_name)
@@ -33,8 +33,7 @@ def convert_and_insert(file_name, host, user, pass, db_name, series_name)
     file.readlines.each do |l|
       buffer.push(l.gsub(/(\n|\r\n)/, ''))
 
-      # 4つで一データ
-      next if buffer.length < 4
+      next unless buffer.last.include?('※')
 
       data = parse buffer
 
