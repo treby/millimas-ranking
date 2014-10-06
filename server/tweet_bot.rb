@@ -32,13 +32,11 @@ exit if data.nil?
 
 timestamp = data[:updated_at]
 
-tweet = <<-EOS
-#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダーは
-  1位 #{data[:border_1].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse}pt
-  100位 #{data[:border_100].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse}pt
-  1200位 #{data[:border_1200].to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse}pt
-です。
-EOS
+tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダーは\n"
+data.select{|sym| sym.to_s.include? 'border_' }.each do |border, score|
+  tweet += "  #{border.to_s.sub('border_', '')}位 #{score.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse}pt\n"
+end
+tweet += "です。\n"
 
 Twitter::REST::Client.new(
   consumer_key:        ENV['TWITTER_CONSUMER_KEY'],
