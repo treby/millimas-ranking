@@ -1,8 +1,13 @@
 require 'time'
+require 'optparse'
 require 'influxdb'
 
+params = ARGV.getopts('s:f:')
 series_name = 'sample'
-res_file_name = File.expand_path('%s.log'%[series_name], File.dirname(__FILE__))
+series_name = params['s'] unless params['s'].nil?
+file_name = series_name
+file_name = params['f'] unless params['f'].nil?
+res_file_name = File.expand_path("#{file_name}", File.dirname(__FILE__))
 host = 'localhost'
 user = 'treby'
 pass = 'treby'
