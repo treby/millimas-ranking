@@ -30,12 +30,16 @@ def convert_and_insert(file_name, host, user, pass, db_name, series_name)
 
   open(file_name) do |file|
     buffer = []
+    last_data = {}
     file.readlines.each do |l|
       buffer.push(l.gsub(/(\n|\r\n)/, ''))
 
       next unless buffer.last.include?('※')
 
       data = parse buffer
+      next if data[:time] == last_data[:time]
+
+      last_data = data
 
       data_list.push(data)
       influxdb.write_point(series_name, data)
