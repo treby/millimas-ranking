@@ -48,7 +48,7 @@ agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,""
   output.push border
 end
 
-timestamp = agent.page.search('.pb')[3].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
+timestamp = agent.page.search('.pb')[7].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
 puts timestamp
 
 output.push timestamp
@@ -57,4 +57,4 @@ open('event.log', 'a+') do |f|
   f.write output.join("\n")
   f.write "\n"
 end
-`ruby insert_influxdb.rb -s medal201410 -f recent.tmp`
+`ruby insert_influxdb.rb -s choco201410 -f recent.tmp`
