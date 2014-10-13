@@ -57,4 +57,3 @@ open('event.log', 'a+') do |f|
   f.write output.join("\n")
   f.write "\n"
 end
-`ruby insert_influxdb.rb -s choco201410 -f recent.tmp`
