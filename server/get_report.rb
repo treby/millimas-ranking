@@ -1,5 +1,9 @@
 require 'mechanize'
 
+html_filename = 'recent.html'
+log_filename = 'event.log'
+recent_tmp = 'recent.tmp'
+
 def login(agent)
   gree_email = ENV['GREE_EMAIL']
   gree_pass = ENV['GREE_PASSWORD']
@@ -38,7 +42,7 @@ end
 
 output = []
 agent.get(target_uri)
-agent.page.save!('recent.html')
+agent.page.save!(html_filename)
 
 agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
   next unless line.include?('位')
@@ -52,8 +56,8 @@ timestamp = agent.page.search('.pb')[7].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
 puts timestamp
 
 output.push timestamp
-File.write('recent.tmp', output.join("\n"))
-open('event.log', 'a+') do |f|
+File.write(recent_tmp, output.join("\n"))
+open(log_filename, 'a+') do |f|
   f.write output.join("\n")
   f.write "\n"
 end
