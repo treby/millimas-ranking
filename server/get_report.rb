@@ -52,7 +52,7 @@ agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,""
   output.push border
 end
 
-timestamp = agent.page.search('.pb')[7].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
+timestamp = agent.page.search('.pb')[9].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
 puts timestamp
 
 output.push timestamp
