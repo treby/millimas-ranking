@@ -42,9 +42,11 @@ end
 
 output = []
 agent.get(target_uri)
-agent.page.save!(html_filename)
+event_page = agent.page
 
-agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
+event_page.save!(html_filename)
+
+event_page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
   next unless line.include?('位')
   border = line.strip.sub(/位/, ':')
   puts border
@@ -52,7 +54,12 @@ agent.page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,""
   output.push border
 end
 
-timestamp = agent.page.search('.pb')[9].text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
+target_pb = nil
+event_page.search('.pb').each do |pb_elm|
+  target_pb = pb_elm if pb_elm.text.include? '集計時点'
+end
+
+timestamp = target_pb.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
 puts timestamp
 
 output.push timestamp
