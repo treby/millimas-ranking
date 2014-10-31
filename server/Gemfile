@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'influxdb'
+gem 'mechanize'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
