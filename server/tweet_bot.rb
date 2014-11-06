@@ -3,6 +3,10 @@ require 'influxdb'
 require 'time'
 require 'optparse'
 
+def number_format(number)
+  number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse
+end
+
 params = ARGV.getopts('s:f:')
 series_name = 'sample'
 series_name = params['s'] unless params['s'].nil?
@@ -21,8 +25,8 @@ border_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{t
 velocity_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点の大体の時速は\n"
 current_data.select{|key| key.include? 'border_' }.sort.each do |border, score|
   order = border.to_s.sub('border_', '')
-  border_tweet += "  #{order}位 #{score.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse}pt\n"
-  velocity_tweet += "  #{order}位 #{(score - past_data[border.to_s]).to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse}pt/h\n"
+  border_tweet += "  #{order}位 #{number_format score}pt\n"
+  velocity_tweet += "  #{order}位 #{number_format(score - past_data[border.to_s])}pt/h\n"
 end
 border_tweet += "です。\n"
 velocity_tweet += "です。\n"
