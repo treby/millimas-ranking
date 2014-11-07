@@ -20,13 +20,17 @@ ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{(Time.new - 6
 current_data = ret[series_name].first
 past_data = ret[series_name].last
 
+border_list = {}
+current_data.select{|key| key.include? 'border_' }.sort.each do |border, score|
+  border_list[border.sub('border_', '')] = score
+end
+
 timestamp = Time.at current_data['time']
 border_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダーは\n"
 velocity_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点の大体の時速は\n"
-current_data.select{|key| key.include? 'border_' }.sort.each do |border, score|
-  order = border.to_s.sub('border_', '')
+border_list.sort{|a, b| a.first.to_i <=> b.first.to_i}.each do |order, score|
   border_tweet += "  #{order}位 #{number_format score}pt\n"
-  velocity_tweet += "  #{order}位 #{number_format(score - past_data[border.to_s])}pt/h\n"
+  velocity_tweet += "  #{order}位 #{number_format(score - past_data["border_#{order}"])}pt/h\n"
 end
 border_tweet += "です。\n"
 velocity_tweet += "です。\n"
