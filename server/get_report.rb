@@ -1,7 +1,11 @@
+require 'optparse'
 require 'mechanize'
 
+params = ARGV.getopts('s:')
+series_name = 'event'
+series_name = params['s'] unless params['s'].nil?
+log_filename = "#{series_name}.log"
 html_filename = 'recent.html'
-log_filename = 'event.log'
 recent_tmp = 'recent.tmp'
 
 def login(agent)
