@@ -55,6 +55,4 @@ def convert_and_insert(file_name, host, user, pass, db_name, series_name)
   data_list
 end
 
-convert_and_insert(res_file_name, host, user, pass, db_name, series_name).each do |data|
-  p data
-end
+convert_and_insert(res_file_name, host, user, pass, db_name, series_name)
