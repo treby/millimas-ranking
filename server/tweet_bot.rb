@@ -16,7 +16,7 @@ pass = 'treby'
 db_name = 'millimas_ranking'
 
 influxdb = InfluxDB::Client.new db_name, host: host, username: user, password: pass
-ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{(Time.new - 60 * 60).utc.strftime("%Y-%m-%d %H:%M:%S")}'"
+ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{(Time.new - 60 * 60).utc.strftime("%Y-%m-%d %H:%M:00")}'"
 current_data = ret[series_name].first
 past_data = ret[series_name].last
 
