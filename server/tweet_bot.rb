@@ -7,6 +7,10 @@ def number_format(number)
   number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse
 end
 
+def time_format(time)
+  time.utc.strftime("%Y-%m-%d %H:%M:%S")
+end
+
 params = ARGV.getopts('s:f:')
 series_name = 'sample'
 series_name = params['s'] unless params['s'].nil?
@@ -16,7 +20,9 @@ pass = 'treby'
 db_name = 'millimas_ranking'
 
 influxdb = InfluxDB::Client.new db_name, host: host, username: user, password: pass
-ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{(Time.new - 60 * 60).utc.strftime("%Y-%m-%d %H:%M:00")}'"
+time_to_get = Time.new - 60 * 3 # 3 minutes ago
+
+ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{time_format(time_to_get - 60 * 60)}' AND time < '#{time_format(time_to_get + 60)}'"
 current_data = ret[series_name].first
 past_data = ret[series_name].last
 
