@@ -33,7 +33,7 @@ end
 
 timestamp = Time.at current_data['time']
 border_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダーは\n"
-velocity_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点の大体の時速は\n"
+velocity_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダー時速は\n"
 border_list.sort{|a, b| a.first.to_i <=> b.first.to_i}.each do |order, score|
   border_tweet += "  #{order}位 #{number_format score}pt\n"
   velocity_tweet += "  #{order}位 #{number_format(score - past_data["border_#{order}"])}pt/h\n"
