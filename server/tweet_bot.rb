@@ -28,18 +28,16 @@ past_data = ret[series_name].last
 
 border_list = {}
 current_data.select{|key| key.include? 'border_' }.sort.each do |border, score|
-  border_list[border.sub('border_', '')] = score
+  border_list[border.sub('border_', '')] = { point: score, velocity: (score - past_data[border]) }
 end
 
 timestamp = Time.at current_data['time']
-border_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダーは\n"
-velocity_tweet = "#{timestamp.month}月#{timestamp.day}日 #{timestamp.hour}時#{timestamp.min}分時点のボーダー時速は\n"
-border_list.sort{|a, b| a.first.to_i <=> b.first.to_i}.each do |order, score|
-  border_tweet += "  #{order}位 #{number_format score}pt\n"
-  velocity_tweet += "  #{order}位 #{number_format(score - past_data["border_#{order}"])}pt/h\n"
+tweet_txt = "⭐️#{timestamp.month}/#{timestamp.day} #{timestamp.hour}:#{timestamp.min}時点\n"
+border_list.each do |rank, border|
+  tweet_txt += "　#{rank}位 #{number_format border[:point]}pt"
+  tweet_txt += "(+#{number_format border[:velocity]})" unless border[:velocity].nil?
+  tweet_txt += "\n"
 end
-border_tweet += "です。\n"
-velocity_tweet += "です。\n"
 
 Twitter::REST::Client.new(
   consumer_key:        ENV['TWITTER_CONSUMER_KEY'],
@@ -47,6 +45,5 @@ Twitter::REST::Client.new(
   access_token:        ENV['TWITTER_ACCESS_TOKEN'],
   access_token_secret: ENV['TWITTER_ACCESS_TOKEN_SECRET']
 ) do |bot|
-  bot.update border_tweet
-  bot.update velocity_tweet
+  bot.update tweet_txt
 end
