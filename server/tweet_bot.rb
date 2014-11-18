@@ -7,6 +7,10 @@ def number_format(number)
   number.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\1,').reverse
 end
 
+def border_number(border_text)
+  border_text.sub('border_', '').to_i
+end
+
 def time_format(time)
   time.utc.strftime("%Y-%m-%d %H:%M:%S")
 end
@@ -27,8 +31,8 @@ current_data = ret[series_name].first
 past_data = ret[series_name].last
 
 border_list = {}
-current_data.select{|key| key.include? 'border_' }.sort.each do |border, score|
-  border_list[border.sub('border_', '')] = { point: score, velocity: (score - past_data[border]) }
+current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.first) <=> border_number(b.first)}.each do |border, score|
+  border_list[border_number(border).to_s] = { point: score, velocity: (score - past_data[border]) }
 end
 
 timestamp = Time.at current_data['time']
