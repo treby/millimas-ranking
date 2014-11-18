@@ -36,11 +36,29 @@ current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.f
 end
 
 timestamp = Time.at current_data['time']
-tweet_txt = "⭐️#{timestamp.month}/#{timestamp.day} #{timestamp.hour}:#{timestamp.min}時点\n"
+border_txt = velocity_txt = tweet_txt = "⭐️#{timestamp.month}/#{timestamp.day} #{timestamp.hour}:#{timestamp.min}時点"
+border_txt += "のボーダーです。\n"
+velocity_txt += "のボーダー時速です。\n"
+tweet_txt += "\n"
+
 border_list.each do |rank, border|
+  # Borders
   tweet_txt += "　#{rank}位 #{number_format border[:point]}pt"
+  border_txt += "　#{rank}位 #{number_format border[:point]}pt\n"
+
+  # Velocities
   tweet_txt += "(+#{number_format border[:velocity]})" unless border[:velocity].nil?
+  velocity_txt += "　#{rank}位 #{number_format border[:velocity]}pt/h\n"
+
   tweet_txt += "\n"
+end
+
+tweet_list = []
+if tweet_txt.length > 140
+  tweet_list.push border_txt
+  tweet_list.push velocity_txt
+else
+  tweet_list.push tweet_txt
 end
 
 Twitter::REST::Client.new(
@@ -49,5 +67,7 @@ Twitter::REST::Client.new(
   access_token:        ENV['TWITTER_ACCESS_TOKEN'],
   access_token_secret: ENV['TWITTER_ACCESS_TOKEN_SECRET']
 ) do |bot|
-  bot.update tweet_txt
+  tweet_list.each do |tweet|
+    bot.update tweet
+  end
 end
