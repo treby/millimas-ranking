@@ -36,9 +36,9 @@ current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.f
 end
 
 timestamp = Time.at current_data['time']
-border_txt = velocity_txt = tweet_txt = "⭐️#{timestamp.month}/#{timestamp.day} #{timestamp.hour}:#{timestamp.min}時点"
-border_txt += "のボーダーです。\n"
-velocity_txt += "のボーダー時速です。\n"
+border_txt = velocity_txt = tweet_txt = "⭐️#{timestamp.strftime('%m/%d %H:%M')}時点"
+border_txt += "のボーダー\n"
+velocity_txt += "のボーダー時速\n"
 tweet_txt += "\n"
 
 border_list.each do |rank, border|
