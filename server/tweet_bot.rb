@@ -32,7 +32,7 @@ past_data = ret[series_name].last
 
 border_list = {}
 current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.first) <=> border_number(b.first)}.each do |border, score|
-  border_list[border_number(border).to_s] = { point: score, velocity: (score - past_data[border]) }
+  border_list[border_number(border).to_s] = { point: score, velocity: (score - past_data[border]) } unless past_data[border].nil?
 end
 
 timestamp = Time.at current_data['time']
