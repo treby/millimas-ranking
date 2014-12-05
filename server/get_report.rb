@@ -53,8 +53,6 @@ event_page.save!(html_filename)
 event_page.search('.event-user-status').first.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").gsub(/.pt/,';').split(';').each do |line|
   next unless line.include?('位')
   border = line.strip.sub(/位/, ':')
-  puts border
-
   output.push border
 end
 
@@ -68,7 +66,6 @@ event_page.search('.txt').each do |txt_elm|
 end if target_elm.nil?
 
 timestamp = target_elm.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
-puts timestamp
 
 output.push timestamp
 File.write(recent_tmp, output.join("\n"))
