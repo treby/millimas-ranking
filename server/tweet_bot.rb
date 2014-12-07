@@ -16,8 +16,8 @@ def time_format(time)
 end
 
 params = ARGV.getopts('s:f:')
-series_name = 'sample'
-series_name = params['s'] unless params['s'].nil?
+series_name = params['s']
+series_name ||= 'sample'
 host = 'localhost'
 user = 'treby'
 pass = 'treby'
