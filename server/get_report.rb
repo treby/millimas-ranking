@@ -2,12 +2,12 @@ require 'optparse'
 require 'mechanize'
 
 params = ARGV.getopts('s:f:')
-series_name = 'event'
-series_name = params['s'] unless params['s'].nil?
+series_name = params['s']
+series_name ||= 'event'
 log_filename = "#{series_name}.log"
 html_filename = 'recent.html'
-recent_tmp = 'recent.tmp'
-recent_tmp = params['f'] unless params['f'].nil?
+recent_tmp = params['f']
+recent_tmp ||= 'recent.tmp'
 
 def login(agent)
   gree_email = ENV['GREE_EMAIL']
