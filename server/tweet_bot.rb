@@ -47,7 +47,7 @@ border_list.each do |rank, border|
   border_txt += "　#{rank}位 #{number_format border[:point]}pt\n"
 
   # Velocities
-  tweet_txt += "(+#{number_format border[:velocity]})" unless border[:velocity].nil?
+  tweet_txt += "(+#{number_format border[:velocity]})"
   velocity_txt += "　#{rank}位 #{number_format border[:velocity]}pt/h\n"
 
   tweet_txt += "\n"
