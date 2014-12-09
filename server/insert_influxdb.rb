@@ -3,10 +3,10 @@ require 'optparse'
 require 'influxdb'
 
 params = ARGV.getopts('s:f:')
-series_name = 'sample'
-series_name = params['s'] unless params['s'].nil?
-file_name = series_name
-file_name = params['f'] unless params['f'].nil?
+series_name = params['s']
+series_name ||= 'sample'
+file_name = params['f']
+file_name ||= series_name
 res_file_name = File.expand_path("#{file_name}", File.dirname(__FILE__))
 host = 'localhost'
 user = 'treby'
