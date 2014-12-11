@@ -15,6 +15,8 @@ def time_format(time)
   time.utc.strftime("%Y-%m-%d %H:%M:%S")
 end
 
+velocity_enabled = false
+
 params = ARGV.getopts('s:f:')
 series_name = params['s']
 series_name ||= 'sample'
@@ -32,7 +34,11 @@ past_data = ret[series_name].last
 
 border_list = {}
 current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.first) <=> border_number(b.first)}.each do |border, score|
-  border_list[border_number(border).to_s] = { point: score, velocity: (score - past_data[border]) } unless past_data[border].nil?
+  if velocity_enabled
+    border_list[border_number(border).to_s] = { point: score, velocity: (score - past_data[border]) } unless past_data[border].nil?
+  else
+    border_list[border_number(border).to_s] = { point: score }
+  end
 end
 
 timestamp = Time.at current_data['time']
@@ -47,8 +53,10 @@ border_list.each do |rank, border|
   border_txt += "　#{rank}位 #{number_format border[:point]}pt\n"
 
   # Velocities
-  tweet_txt += "(+#{number_format border[:velocity]})"
-  velocity_txt += "　#{rank}位 #{number_format border[:velocity]}pt/h\n"
+  if velocity_enabled
+    tweet_txt += "(+#{number_format border[:velocity]})"
+    velocity_txt += "　#{rank}位 #{number_format border[:velocity]}pt/h\n"
+  end
 
   tweet_txt += "\n"
 end
@@ -56,7 +64,7 @@ end
 tweet_list = []
 if tweet_txt.length > 140
   tweet_list.push border_txt
-  tweet_list.push velocity_txt
+  tweet_list.push velocity_txt if velocity_enabled
 else
   tweet_list.push tweet_txt
 end
