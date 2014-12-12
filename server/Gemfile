@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'influxdb'
 gem 'mechanize'
+gem 'twitter'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
