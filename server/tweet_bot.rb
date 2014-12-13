@@ -15,7 +15,28 @@ def time_format(time)
   time.utc.strftime("%Y-%m-%d %H:%M:%S")
 end
 
+def kaomoji()
+  [
+    '(o・∇・o)',
+    '\(o・∇・o)/',
+    '(*゜0゜)',
+    '(。`・∀・´)⊃',
+    '(。`・∀・´)',
+    'ノ≧∇≦)ノ',
+    'ε=ε=(ノ≧∇≦)ノ',
+    '(-^〇^-)',
+    '(・ρ・*)',
+    'ε=(・ρ・*)',
+    '(((o(*゜▽゜*)o)))',
+    '(*´・ε・*)σ||',
+    '∈(´__________｀)∋',
+    '(。+・`д・。)'
+  ].sample(1).first
+end
+
 velocity_enabled = false
+kaomoji_enabled = true
+
 
 params = ARGV.getopts('s:f:')
 series_name = params['s']
@@ -26,7 +47,7 @@ pass = 'treby'
 db_name = 'millimas_ranking'
 
 influxdb = InfluxDB::Client.new db_name, host: host, username: user, password: pass
-time_to_get = Time.new - 60 * 3 # 3 minutes ago
+time_to_get = Time.new - 60 * 3 # for debug : Time.parse('2014-12-14 00:00:00')
 
 ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{time_format(time_to_get - 60 * 60)}' AND time < '#{time_format(time_to_get + 60)}'"
 current_data = ret[series_name].first
@@ -45,7 +66,7 @@ timestamp = Time.at current_data['time']
 border_txt = velocity_txt = tweet_txt = "☆#{timestamp.strftime('%m/%d %H:%M')}時点"
 border_txt += "のボーダーは\n"
 velocity_txt += "のボーダー時速は\n"
-tweet_txt += "\n"
+tweet_txt += "#{kaomoji}\n"
 
 border_list.each do |rank, border|
   # Borders
