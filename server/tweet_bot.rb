@@ -35,10 +35,10 @@ def kaomoji()
 end
 
 velocity_enabled = false
-kaomoji_enabled = true
+kaomoji_enabled = false
 
-
-params = ARGV.getopts('s:f:')
+params = ARGV.getopts('s:f:', 'debug')
+debug_mode = params['debug']
 series_name = params['s']
 series_name ||= 'sample'
 host = 'localhost'
@@ -47,11 +47,19 @@ pass = 'treby'
 db_name = 'millimas_ranking'
 
 influxdb = InfluxDB::Client.new db_name, host: host, username: user, password: pass
-time_to_get = Time.new - 60 * 3 # for debug : Time.parse('2014-12-14 00:00:00')
+duration = 60 * 60 # An hour as default
+time_to_get = Time.new # for debug : Time.parse('2014-12-14 00:00:00')
+time_from = time_to_get - duration * 2
 
-ret = influxdb.query "SELECT * FROM #{series_name} WHERE time > '#{time_format(time_to_get - 60 * 60)}' AND time < '#{time_format(time_to_get + 60)}'"
+ret = influxdb.query "SELECT * FROM #{series_name} WHERE time < '#{time_format(time_to_get + 1)}' AND time > '#{time_format(time_from)}'"
 current_data = ret[series_name].first
+current_time = Time.at current_data['time']
 past_data = ret[series_name].last
+
+ret[series_name].reverse.each do |data|
+  break if data['time'] > (current_data['time'] - duration)
+  past_data = data
+end
 
 border_list = {}
 current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.first) <=> border_number(b.first)}.each do |border, score|
@@ -62,11 +70,10 @@ current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.f
   end
 end
 
-timestamp = Time.at current_data['time']
-border_txt = velocity_txt = tweet_txt = "☆#{timestamp.strftime('%m/%d %H:%M')}時点"
+border_txt = velocity_txt = tweet_txt = "☆#{current_time.strftime('%m/%d %H:%M')}時点"
 border_txt += "のボーダーは\n"
 velocity_txt += "のボーダー時速は\n"
-tweet_txt += "#{kaomoji}\n"
+tweet_txt += kaomoji_enabled ? "#{kaomoji}\n" : "\n"
 
 border_list.each do |rank, border|
   # Borders
@@ -88,6 +95,13 @@ if tweet_txt.length > 140
   tweet_list.push velocity_txt if velocity_enabled
 else
   tweet_list.push tweet_txt
+end
+
+if debug_mode
+  tweet_list.each do |tweet|
+    puts tweet
+  end
+  exit
 end
 
 Twitter::REST::Client.new(
