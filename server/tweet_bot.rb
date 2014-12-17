@@ -70,14 +70,15 @@ current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.f
   end
 end
 
-border_txt = velocity_txt = tweet_txt = "☆#{current_time.strftime('%m/%d %H:%M')}時点"
+tweet_txt = "#{current_time.strftime('%m/%d %H:%M')}時点"
+tweet_txt += kaomoji_enabled ? "#{kaomoji}\n" : "\n"
+border_txt = velocity_txt = "☆#{current_time.strftime('%m/%d %H:%M')}時点"
 border_txt += "のボーダーは\n"
 velocity_txt += "のボーダー時速は\n"
-tweet_txt += kaomoji_enabled ? "#{kaomoji}\n" : "\n"
 
 border_list.each do |rank, border|
   # Borders
-  tweet_txt += "　#{rank}位 #{number_format border[:point]}pt"
+  tweet_txt += "#{rank}位 #{number_format border[:point]}pt"
   border_txt += "　#{rank}位 #{number_format border[:point]}pt\n"
 
   # Velocities
