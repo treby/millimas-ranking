@@ -59,12 +59,8 @@ end
 
 target_elm = nil
 event_page.search('.pb').each do |pb_elm|
-  target_elm = pb_elm if pb_elm.text.include? '集計時点'
+  target_elm = pb_elm and break if pb_elm.text.include? '集計時点'
 end
-
-event_page.search('.txt').each do |txt_elm|
-  target_elm = txt_elm if txt_elm.text.include? '集計時点'
-end if target_elm.nil?
 
 timestamp = target_elm.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"")
 
