@@ -5,9 +5,10 @@ params = ARGV.getopts('s:f:')
 series_name = params['s']
 series_name ||= 'event'
 log_filename = "#{series_name}.log"
-html_filename = 'recent.html'
+tmp_identify='recent'
+html_filename = "#{tmp_identify}.html"
 recent_tmp = params['f']
-recent_tmp ||= 'recent.tmp'
+recent_tmp ||= "#{tmp_identify}.tmp"
 
 def login(agent)
   gree_email = ENV['GREE_EMAIL']
