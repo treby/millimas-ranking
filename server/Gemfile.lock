@@ -8,6 +8,8 @@ GEM
     equalizer (0.0.9)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
+    gruff (0.5.1)
+      rmagick
     http (0.6.3)
       http_parser.rb (~> 0.6.0)
     http-cookie (1.0.2)
@@ -36,6 +38,7 @@ GEM
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     ntlm-http (0.1.1)
+    rmagick (2.13.4)
     simple_oauth (0.3.1)
     thread_safe (0.3.4)
     twitter (5.13.0)
@@ -58,6 +61,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  gruff
   influxdb
   mechanize
   twitter
