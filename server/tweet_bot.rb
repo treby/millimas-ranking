@@ -73,18 +73,18 @@ end
 tweet_txt = "#{current_time.strftime('%m/%d %H:%M')}時点"
 tweet_txt += kaomoji_enabled ? "#{kaomoji}\n" : "\n"
 border_txt = velocity_txt = "☆#{current_time.strftime('%m/%d %H:%M')}時点"
-border_txt += "のボーダーは\n"
-velocity_txt += "のボーダー時速は\n"
+border_txt += "(ボーダー)\n"
+velocity_txt += "(時速)\n"
 
 border_list.each do |rank, border|
   # Borders
   tweet_txt += "#{rank}位 #{number_format border[:point]}pt"
-  border_txt += "　#{rank}位 #{number_format border[:point]}pt\n"
+  border_txt += "#{rank}位 #{number_format border[:point]}pt\n"
 
   # Velocities
   if velocity_enabled
     tweet_txt += "(+#{number_format border[:velocity]})"
-    velocity_txt += "　#{rank}位 #{number_format border[:velocity]}pt/h\n"
+    velocity_txt += "#{rank}位 #{number_format border[:velocity]}pt/h\n"
   end
 
   tweet_txt += "\n"
