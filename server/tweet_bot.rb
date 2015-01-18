@@ -34,7 +34,7 @@ def kaomoji()
   ].sample(1).first
 end
 
-velocity_enabled = false
+velocity_enabled = true
 kaomoji_enabled = false
 
 params = ARGV.getopts('s:f:', 'debug')
