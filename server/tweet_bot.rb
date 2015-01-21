@@ -72,9 +72,9 @@ end
 
 tweet_txt = "#{current_time.strftime('%m/%d %H:%M')}時点"
 tweet_txt += kaomoji_enabled ? "#{kaomoji}\n" : "\n"
-border_txt = velocity_txt = "☆#{current_time.strftime('%m/%d %H:%M')}時点"
-border_txt += "(ボーダー)\n"
-velocity_txt += "(時速)\n"
+border_txt = velocity_txt = "#{current_time.strftime('%m/%d %H:%M')}時点"
+border_txt += "のボーダー\n"
+velocity_txt += "の時速\n"
 
 border_list.each do |rank, border|
   # Borders
