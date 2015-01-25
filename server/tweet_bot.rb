@@ -15,27 +15,7 @@ def time_format(time)
   time.utc.strftime("%Y-%m-%d %H:%M:%S")
 end
 
-def kaomoji()
-  [
-    '(o・∇・o)',
-    '\(o・∇・o)/',
-    '(*゜0゜)',
-    '(。`・∀・´)⊃',
-    '(。`・∀・´)',
-    'ノ≧∇≦)ノ',
-    'ε=ε=(ノ≧∇≦)ノ',
-    '(-^〇^-)',
-    '(・ρ・*)',
-    'ε=(・ρ・*)',
-    '(((o(*゜▽゜*)o)))',
-    '(*´・ε・*)σ||',
-    '∈(´__________｀)∋',
-    '(。+・`д・。)'
-  ].sample(1).first
-end
-
 velocity_enabled = true
-kaomoji_enabled = false
 
 params = ARGV.getopts('s:f:', 'debug')
 debug_mode = params['debug']
@@ -71,7 +51,6 @@ current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.f
 end
 
 tweet_txt = "#{current_time.strftime('%m/%d %H:%M')}時点"
-tweet_txt += kaomoji_enabled ? "#{kaomoji}\n" : "\n"
 border_txt = velocity_txt = "#{current_time.strftime('%m/%d %H:%M')}時点"
 border_txt += "のボーダー\n"
 velocity_txt += "の時速\n"
