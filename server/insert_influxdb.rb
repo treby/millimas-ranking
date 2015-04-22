@@ -37,6 +37,7 @@ def convert_and_insert(file_name, host, user, pass, db_name, series_name)
     buffer = []
     last_data = {}
     file.readlines.each do |l|
+      l.force_encoding('UTF-8')
       buffer.push(l.gsub(/(\n|\r\n)/, ''))
 
       next unless buffer.last.include?('※')
