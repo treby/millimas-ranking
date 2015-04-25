@@ -1,14 +1,13 @@
 require 'optparse'
 require 'mechanize'
 
-params = ARGV.getopts('s:f:')
-series_name = params['s']
-series_name ||= 'event'
+params = ARGV.getopts('s:f:', 'event_id:')
+series_name = params['s'] || 'event'
+event_id = params['event_id']
 log_filename = "#{series_name}.log"
 tmp_identify='recent'
 html_filename = "#{tmp_identify}.html"
-recent_tmp = params['f']
-recent_tmp ||= "#{tmp_identify}.tmp"
+recent_tmp = params['f'] || "#{tmp_identify}.tmp"
 
 def login(agent)
   gree_email = ENV['GREE_EMAIL']
@@ -24,6 +23,24 @@ def login(agent)
       end
     end.submit
   end
+end
+
+def imc_top_lounge(agent, event_id, page_limit = 2)
+  lounge_list = []
+  lounge_ranking_page = "http://imas.gree-apps.net/app/index.php/event/#{event_id}/ranking/lounge"
+  (1..page_limit).each do |page_num|
+    agent.get("#{lounge_ranking_page}?page=#{page_num}") do |page|
+      page.search('.list-bg > li').each do |li|
+        lounge_id = li.search('td').last.search('a').first.attributes['href'].value.split('/').last.to_i
+        lounge_name = li.search('td').last.search('a').first.child.text
+        lounge_rank = li.search('td').last.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").match(/(\d+)位/)[1]
+        lounge_point = li.search('td').last.text.gsub(/(\t|\s|\n|\r|\f|\v)/,"").split('pt').last.gsub("\u00A0", '').gsub(',', '').to_i
+        lounge_list << { rank: lounge_rank, id: lounge_id, name: lounge_name, pt: lounge_point }
+      end
+    end
+  end
+
+  lounge_list
 end
 
 agent = Mechanize.new
@@ -70,4 +87,16 @@ File.write(recent_tmp, output.join("\n"))
 open(log_filename, 'a+') do |f|
   f.write output.join("\n")
   f.write "\n"
+end
+
+# IMCならラウンジランキングも取得する
+if series_name.include?('_imc') && !(event_id.nil?)
+  rank_list = imc_top_lounge(agent, event_id.to_i)
+  open("#{series_name}_lounge.log", 'a+') do |f|
+    t = Time.now
+    f.write "#{t}\t#{t.to_i}\n"
+    rank_list.each do |rank|
+      f.write "#{rank[:rank]}\t#{rank[:id]}\t#{rank[:name]}\t#{rank[:pt]}\n"
+    end
+  end
 end
