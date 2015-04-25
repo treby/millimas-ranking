@@ -15,6 +15,17 @@ def time_format(time)
   time.utc.strftime("%Y-%m-%d %H:%M:%S")
 end
 
+def imc_lounge_border_tweet(logfile_name)
+  ranking_arr = File.open(logfile_name).readlines
+  current_info = ranking_arr[-21..-1]
+  time = Time.at(current_info.first.split("\t").last.to_i)
+  lounges = current_info[1..-1]
+  lounge_list = lounges.map { |l| l.force_encoding('UTF-8').split("\t") }
+  lounge = lounge_list.select { |lounge| lounge.first.to_i == 11 }.first
+  point = lounge.last.gsub('pt', '').to_i
+  "#{time.strftime('%d日%H:%M')}時点のラウンジ11位ボーダーは\n#{number_format(point)}ptです。"
+end
+
 velocity_enabled = true
 
 params = ARGV.getopts('s:f:', 'debug')
@@ -71,12 +82,14 @@ border_list.each do |rank, border|
 end
 
 tweet_list = []
+
 if tweet_txt.length > 140
   tweet_list.push border_txt
   tweet_list.push velocity_txt if velocity_enabled
 else
   tweet_list.push tweet_txt
 end
+tweet_list.push imc_lounge_border_tweet("#{series_name}_lounge.log") if series_name.include? '_imc'
 
 if debug_mode
   tweet_list.each do |tweet|
