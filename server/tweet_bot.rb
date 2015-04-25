@@ -43,6 +43,7 @@ end
 
 border_list = {}
 current_data.select{|key| key.include? 'border_' }.sort{|a, b| border_number(a.first) <=> border_number(b.first)}.each do |border, score|
+  next if score.nil?
   if velocity_enabled
     border_list[border_number(border).to_s] = { point: score, velocity: (score - past_data[border]) } unless past_data[border].nil?
   else
